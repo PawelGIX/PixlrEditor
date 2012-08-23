@@ -116,6 +116,7 @@ class ProcessPixlrEditor extends Process implements Module  {
 		$p->parent = wire('pages')->get(3); // /admin/pages
 		$p->title = 'Pixlr Image Process';
 		$p->name = 'pixlr-image-process';
+                $p->status = Page::statusSystem;
 		$p->process = $this;
 		$p->save();
 	}
@@ -124,7 +125,7 @@ class ProcessPixlrEditor extends Process implements Module  {
 	public function ___uninstall() {
 		parent::___uninstall();
 		
-		$p = $this->pages->get(3)->children()->get('name=pixlr-image-process');
+		$p = $this->pages->get('has_parent=3, name=pixlr-image-process, include=all');
 		if ($p->id) $p->delete();
 		
 		$p = $this->permissions->get('pixlr-image-process');

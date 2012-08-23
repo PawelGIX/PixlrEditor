@@ -80,7 +80,7 @@ class PixlrEditor extends WireData implements Module, ConfigurableModule {
 
                 
                 //url to pixlr-image-process Page
-		$this->pixlrProcessUrl = wire('pages')->get(3)->children()->get('name=pixlr-image-process')->httpUrl;
+		$this->pixlrProcessUrl = wire('pages')->get('has_parent=3, name=pixlr-image-process, include=all')->httpUrl;
                 
                 // enabled editors
                 $this->editors = $this->editors;

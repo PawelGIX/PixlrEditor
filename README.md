@@ -14,5 +14,5 @@ Available editors:
 WARNING
 ==================
 
-Not tested with the module Thumbnails
+Not tested with Thumbnails module.
 
