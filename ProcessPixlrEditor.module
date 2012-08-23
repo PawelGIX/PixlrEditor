@@ -1,0 +1,135 @@
+<?php
+/**
+ * Process Page for PixlrEditor Module
+ * 
+ * ProcessWire 2.x 
+ * Copyright (C) 2012 Paweł Gruchociak 
+ * Licensed under GNU/GPL v2
+ * 
+ * http://www.processwire.com
+ * http://www.ryancramer.com
+ *
+ */
+class ProcessPixlrEditor extends Process implements Module  {
+
+	public static function getModuleInfo() {
+		return array(
+			'title' => 'Pixlr Image Processing',
+			'summary' => 'Process images edited in Pixlr',
+			'href' => 'http://pixlr.com',
+			'version' => 100,
+			'permanent' => false,
+			'autoload' => false,
+			'singular' => true,
+			'permission' => "page-edit",
+                        'requires' => 'PixlrEditor'
+		);
+	}
+	
+	
+	public function __construct() {
+	   
+	}
+	
+        
+	public function ___execute() {
+		$out = '';
+		
+                
+                
+                if($this->input->get('exit'))
+                {
+                    // close overlay
+                    return '<script> window.parent.PixlrEditor.closeOverlay(); </script>';
+                }
+                
+                
+                //return $out;
+		$this->setFuel('processHeadline', 'Processing Image');
+		
+		
+		$image_url = $this->input->get->image; // url to image file on pixlr.com
+		$image_id = (int) $this->input->get->image_id;
+		$page_id  = (int) $this->input->get->page_id;
+		$filename = $this->input->get->filename; // basename
+		$field    = $this->input->get->field; // field name eg 'images'
+               
+                
+                
+                /* @var $page Page */
+		$page = wire('pages')->get($page_id);
+              
+                
+                
+                
+                if( !$page->id )
+                {
+                    throw new WireException( $this->_("Page not found.") );
+                }
+                
+                // Is there field...
+                if( !$field && $page->template->fieldgroup->getField($field,false) !=null )
+                {
+                    throw new WireException( sprintf( $this->_("Field %s not found."), $field) );
+                }
+                
+                // and proper image URL...
+		if ( !$image_url || !preg_match('/^http:\/\/[a-z0-9]+.pixlr.com/i', $image_url)) {
+			throw new WireException( sprintf( $this->_("Image file: %s not found or wrong hostname."), $image_url) );
+		} else {
+                    
+                    // then let's replace images.
+                    
+                    /* @var $old_img FieldtypeImage */
+                    $old_img = $page->get($field)->get("$filename"); // find image
+                    
+                    if($old_img) // image still exists ;)
+                    {
+
+                        if(file_put_contents($old_img->filename, file_get_contents($image_url))) // replace image
+                        {
+
+                            $old_img->removeVariations(); // clear variations
+
+                            // show new image to user.
+                            $out = '<img src="'. $old_img->url .'?'. time() .'" style="max-height:95%;max-width:95%;display:block;" alt="" />';
+
+                        }
+                    }
+                         
+		}
+			
+			
+
+
+		return $out;
+	}
+        
+	
+	public function ___install() {
+		parent::___install();
+		
+		//$this->modules->get('InputfieldCheckboxes');
+                
+		$p = new Page();
+		$p->template = $this->templates->get("admin");
+		$p->parent = wire('pages')->get(3); // /admin/pages
+		$p->title = 'Pixlr Image Process';
+		$p->name = 'pixlr-image-process';
+		$p->process = $this;
+		$p->save();
+	}
+        
+	
+	public function ___uninstall() {
+		parent::___uninstall();
+		
+		$p = $this->pages->get(3)->children()->get('name=pixlr-image-process');
+		if ($p->id) $p->delete();
+		
+		$p = $this->permissions->get('pixlr-image-process');
+		if ($p->id) $p->delete();
+	}
+
+    
+}

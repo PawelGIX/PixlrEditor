@@ -1,4 +1,18 @@
-processwire-pixlr
-=================
+How to install
+==============
 
-An integration between pixlr.com and ProcessWire
+Just place files in site/modules/PixlrEditor/ folder and install PixlrEditor module. After that each FieldtypeImage field should have buttons to image editors.
+
+You can enable/disable chosen image editor in PixlrEditor module settings:
+
+Available editors:
+
+- Pixlr Express
+- Pixlr Editor
+
+
+WARNING
+==================
+
+Not tested with the module Thumbnails
+

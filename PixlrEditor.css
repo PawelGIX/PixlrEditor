@@ -1,0 +1,13 @@
+
+.pixlr-menu-bar{
+	float: right;
+	top: 3em;
+	right: 1em;
+}
+.pixlr-menu-bar .pixlr-edit-button{
+	margin: 0 0 0 1em;
+        display: block;
+}
+.pixlr-menu-bar .pixlr-edit-button:first-child{
+	margin: 0;
+}
