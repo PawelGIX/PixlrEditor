@@ -6,8 +6,12 @@
 }
 .pixlr-menu-bar .pixlr-edit-button{
 	margin: 0 0 0 1em;
+<<<<<<< HEAD
         padding: 0.3em 0.5em;
       
+=======
+        
+>>>>>>> 0897ddd392c5532d8caa24ab8df9738c10a832b5
 }
 .pixlr-menu-bar .pixlr-edit-button:first-child{
 	margin: 0;
