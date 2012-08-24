@@ -13,152 +13,147 @@
  * http://www.ryancramer.com
  *
  */
-
 class PixlrEditor extends WireData implements Module, ConfigurableModule {
 
-	var $protocol;
-        var $pixlrProcessUrl;
+    var $protocol;
+    var $pixlrProcessUrl;
 
-	/**
-	 * getModuleInfo is a module required by all modules to tell ProcessWire about them
-	 *
-	 * @return array
-	 *
-	 */
-	public static function getModuleInfo() {
+    /**
+     * getModuleInfo is a module required by all modules to tell ProcessWire about them
+     *
+     * @return array
+     *
+     */
+    public static function getModuleInfo() {
 
-		return array(
+        return array(
+            // The module'ss title, typically a little more descriptive than the class name
+            'title' => 'PixlrEditor',
+            // version: major, minor, revision, i.e. 100 = 1.0.0
+            'version' => 101,
+            // summary is brief description of what this module is
+            'summary' => 'EEnables users to use Pixlr online photo editor on their own site. BETA TEST.',
+            // Optional URL to more information about the module
+            //'href' => 'http://www.processwire.com',
+            // singular=true: indicates that only one instance of the module is allowed.
+            // This is usually what you want for modules that attach hooks. 
+            'singular' => true,
+            // autoload=true: indicates the module should be started with ProcessWire.
+            // This is necessary for any modules that attach runtime hooks, otherwise those
+            // hooks won't get attached unless some other code calls the module on it's own.
+            // Note that autoload modules are almost always also 'singular' (seen above).
+            'autoload' => true,
+            'installs' => array('ProcessPixlrEditor')
+        );
+    }
 
-			// The module'ss title, typically a little more descriptive than the class name
-			'title' => 'PixlrEditor', 
+    static public function getDefaultData() {
+        return array(
+            'editors' => array('express', 'editor')
+        );
+    }
 
-			// version: major, minor, revision, i.e. 100 = 1.0.0
-			'version' => 101, 
+    public function __construct() {
+        foreach (self::getDefaultData() as $key => $value) {
+            $this->$key = $value;
+        }
+    }
 
-			// summary is brief description of what this module is
-			'summary' => 'EEnables users to use Pixlr online photo editor on their own site. BETA TEST.',
-			
-			// Optional URL to more information about the module
-			//'href' => 'http://www.processwire.com',
-
-			// singular=true: indicates that only one instance of the module is allowed.
-			// This is usually what you want for modules that attach hooks. 
-			'singular' => true, 
-
-			// autoload=true: indicates the module should be started with ProcessWire.
-			// This is necessary for any modules that attach runtime hooks, otherwise those
-			// hooks won't get attached unless some other code calls the module on it's own.
-			// Note that autoload modules are almost always also 'singular' (seen above).
-			'autoload' => true, 
-                        'installs' => array('ProcessPixlrEditor')
-			);
-	}
-        
-        static public function getDefaultData() {
-	   return array(
-		   'editors' => array('express','editor')
-		);
-	}
-	
-	public function __construct() {
-	   foreach(self::getDefaultData() as $key => $value) {
-		   $this->$key = $value;
-	   }
-	}
-        
-	/**
-	 * Initialize the module
-	 *
-	 * ProcessWire calls this when the module is loaded. For 'autoload' modules, this will be called
-	 * when ProcessWire's API is ready. As a result, this is a good place to attach hooks. 
-	 *
-	 */
-	public function init() {
+    /**
+     * Initialize the module
+     *
+     * ProcessWire calls this when the module is loaded. For 'autoload' modules, this will be called
+     * when ProcessWire's API is ready. As a result, this is a good place to attach hooks. 
+     *
+     */
+    public function init() {
 
 
-		$this->protocol = ($this->config->https)? 'https' : 'http';
+        $this->protocol = ($this->config->https) ? 'https' : 'http';
 
-                
-                //url to pixlr-image-process Page
-		$this->pixlrProcessUrl = wire('pages')->get('has_parent=3, name=pixlr-image-process, include=all')->httpUrl;
-                
-                // enabled editors
-                $this->editors = $this->editors;
-                
-		$this->addHook('InputfieldImage::renderItem', $this, 'onItemRender'); 
-		
-                
-                
-	}
 
-	/**
-	 * Example1 hooks into the pages->save method and displays a notice every time a page is saved
-	 *
-	 */
-	public function onItemRender($event)  {
+        //url to pixlr-image-process Page
+        $this->pixlrProcessUrl = wire('pages')->get('has_parent=3, name=pixlr-image-process, include=all')->httpUrl;
 
-		$this->config->scripts->append($this->config->urls->PixlrEditor . "PixlrEditor.js");
-		$this->config->styles->append($this->config->urls->PixlrEditor . "PixlrEditor.css");
-                
+        // enabled editors
+        $this->editors = $this->editors;
 
-                
-		list($pagefile, $id, $n)  = $event->arguments;
-                
-                
-                $page_id  = $pagefile->page->id;
-		$filename = $pagefile->name;    // basename
-		$field    = substr($id,0, strpos($id, '_'));    // field_name 
-		
-                // absolute url to image
-		$imageUrl = "{$this->protocol}://" . $this->config->httpHost . $pagefile->url();
-                
-		
-                //edit button label
-                $edit_link = $this->_("Edit in Pixlr %s");
-                
-                // create menu bar
-                $buttons = null;
-                foreach ( $this->editors as $editor) {
-                    $buttons .= '<button class="pixlr-edit-button" id="'. $id .'" data-url="'. $imageUrl .'" data-target="'. $this->pixlrProcessUrl .'" data-filename="'. $filename .'" data-page_id="'. $page_id .'" data-field="'.$field.'" data-service="'.$editor.'">'.sprintf($edit_link, ucfirst($editor)).'</button>';
-                }
-                
-                // add menu bar
-                if(count($this->editors) > 0)
-		$event->return = preg_replace('/(<p.+InputfieldFileData.+>)/U', '$1<span class="ui-widget ui-widget-content pixlr-menu-bar">'.$buttons.'</span>', $event->return ) ;
-		
-	}
+        $this->addHook('InputfieldImage::renderItem', $this, 'onItemRender');
+        $this->addHook('InputfieldImage::render', $this, 'onRender');
+    }
+
+    /**
+     * Render InputfieldImage
+     *
+     */
+    public function onRender($event) {
+        $this->message("Field render");
+
+        $this->config->scripts->append($this->config->urls->PixlrEditor . "PixlrEditor.js");
+        $this->config->styles->append($this->config->urls->PixlrEditor . "PixlrEditor.css");
+    }
+
+    /**
+     * Render Item
+     *
+     */
+    public function onItemRender($event) {
+
+        $this->message("Item render");
+
+
+        list($pagefile, $id, $n) = $event->arguments;
+
+
+        $page_id = $pagefile->page->id;
+        $filename = $pagefile->name;    // basename
+        $field = substr($id, 0, strpos($id, '_'));    // field_name 
+        // absolute url to image
+        $imageUrl = "{$this->protocol}://" . $this->config->httpHost . $pagefile->url();
+
+
+        //edit button label
+        $edit_link = $this->_("Edit in Pixlr %s");
+
+        // create menu bar
+        $buttons = null;
+        foreach ($this->editors as $editor) {
+            $buttons .= '<button class="pixlr-edit-button" id="' . $id . '" data-url="' . $imageUrl . '" data-target="' . $this->pixlrProcessUrl . '" data-filename="' . $filename . '" data-page_id="' . $page_id . '" data-field="' . $field . '" data-service="' . $editor . '">' . sprintf($edit_link, ucfirst($editor)) . '</button>';
+        }
+
+        // add menu bar
+        if (count($this->editors) > 0)
+            $event->return = preg_replace('/(<p.+InputfieldFileData.+>)/U', '$1<span class="ui-widget ui-widget-content pixlr-menu-bar">' . $buttons . '</span>', $event->return);
+    }
 
     public static function getModuleConfigInputfields(array $data) {
 
-		$data = array_merge(self::getDefaultData(), $data);
+        $data = array_merge(self::getDefaultData(), $data);
 
-		$fields = new InputfieldWrapper();
-		$modules = Wire::getFuel('modules');
-		
-		
-                $field = $modules->get('InputfieldCheckboxes');
-                $field->label = __('Image editors',__FILE__); 
-                $field->description = __('Chose available image editors. Link to the editor will appear under the photo in the gallery.',__FILE__); 
-                $field->attr('id+name', 'editors'); 
-                $field->addOption('editor','Pixlr Editor'); 
-                $field->addOption('express','Pixlr Express'); 
-                $field->attr('value', (isset($data['editors']) ? $data['editors'] : array() )); 
-                
-		$fields->append($field);
-		
-		
-		
-		return $fields;  
+        $fields = new InputfieldWrapper();
+        $modules = Wire::getFuel('modules');
+
+
+        $field = $modules->get('InputfieldCheckboxes');
+        $field->label = __('Image editors', __FILE__);
+        $field->description = __('Chose available image editors. Link to the editor will appear under the photo in the gallery.', __FILE__);
+        $field->attr('id+name', 'editors');
+        $field->addOption('editor', 'Pixlr Editor');
+        $field->addOption('express', 'Pixlr Express');
+        $field->attr('value', (isset($data['editors']) ? $data['editors'] : array()));
+
+        $fields->append($field);
+
+
+
+        return $fields;
     }
-        
 
     public function ___install() {
-         
 
-            $this->modules->get('InputfieldCheckboxes');
 
-            
+        $this->modules->get('InputfieldCheckboxes');
     }
-	
+
 }
 
