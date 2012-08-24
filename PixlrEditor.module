@@ -32,9 +32,9 @@ class PixlrEditor extends WireData implements Module, ConfigurableModule {
             // version: major, minor, revision, i.e. 100 = 1.0.0
             'version' => 101,
             // summary is brief description of what this module is
-            'summary' => 'EEnables users to use Pixlr online photo editor on their own site. BETA TEST.',
+            'summary' => 'Enables users to use Pixlr online photo editor on their own site. BETA TEST.',
             // Optional URL to more information about the module
-            //'href' => 'http://www.processwire.com',
+            'href' => 'https://github.com/PawelGIX/processwire-pixlr',
             // singular=true: indicates that only one instance of the module is allowed.
             // This is usually what you want for modules that attach hooks. 
             'singular' => true,
