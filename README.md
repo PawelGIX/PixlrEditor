@@ -11,8 +11,15 @@ Available editors:
 - Pixlr Editor
 
 
+Probably works well with inputfield Repeater.
+
 WARNING
 ==================
 
 Not tested with Thumbnails module.
+
+
+Links
+===============
+http://processwire.com
 
