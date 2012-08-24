@@ -106,7 +106,7 @@ class PixlrEditor extends WireData implements Module, ConfigurableModule {
 
         $page_id = $pagefile->page->id;
         $filename = $pagefile->name;    // basename
-        $field = substr($id, 0, strpos($id, '_'));    // field_name 
+        $field = substr($id, 0, strrpos($id, '_'));    // field_name 
         // absolute url to image
         $imageUrl = "{$this->protocol}://" . $this->config->httpHost . $pagefile->url();
 

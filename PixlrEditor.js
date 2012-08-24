@@ -111,6 +111,7 @@ var pixlr = (function () {
                 closeBtn.style.top = "0";
                 closeBtn.style.cursor = "pointer";
                 closeBtn.style.padding = "1em";
+                closeBtn.style.zIndex = "1111";
                 closeBtn.style['border-radius'] = "0 0 0 5px";
                 closeBtn.style['-webkit-border-radius'] = "0 0 0 5px";
                 closeBtn.style['-moz-border-radius'] = "0 0 0 5px";
