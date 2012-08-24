@@ -86,9 +86,9 @@ class PixlrEditor extends WireData implements Module, ConfigurableModule {
      * Render InputfieldImage
      *
      */
-    public function onRender($event) {
-        $this->message("Field render");
-
+    public function onRender($event) 
+    {
+        
         $this->config->scripts->append($this->config->urls->PixlrEditor . "PixlrEditor.js");
         $this->config->styles->append($this->config->urls->PixlrEditor . "PixlrEditor.css");
     }
@@ -97,9 +97,8 @@ class PixlrEditor extends WireData implements Module, ConfigurableModule {
      * Render Item
      *
      */
-    public function onItemRender($event) {
-
-        $this->message("Item render");
+    public function onItemRender($event) 
+    {
 
 
         list($pagefile, $id, $n) = $event->arguments;

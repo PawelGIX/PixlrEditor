@@ -45,7 +45,7 @@ class ProcessPixlrEditor extends Process implements Module  {
                 
                 
                 //return $out;
-		$this->setFuel('processHeadline', 'Processing Image');
+		$this->setFuel('processHeadline', 'Preview');
 		
 		
 		$image_url = $this->input->get->image; // url to image file on pixlr.com
