@@ -13,3 +13,26 @@ li.InputfieldImage p.InputfieldFileData{
 .pixlr-menu-bar .pixlr-edit-button:first-child{
     margin: 0;
 }
+.pixlr-exit-btn{
+    position: absolute;
+    z-index: 1111;
+    top: -2.1em;
+    right:0;
+    border-radius: 5px 5px 0 0;
+    -moz-border-radius: 5px 5px 0 0;
+    -webkit-border-radius: 5px 5px 0 0;
+    -o-border-radius: 5px 5px 0 0;
+    
+    padding: 0.2em 1em;
+    color: white;
+    cursor: pointer;
+    
+    font-size: 12px;
+    
+    
+    background-color: #414141;
+    
+}
+.pixlr-exit-btn:hover{
+    background-color: #3ea2ec;
+}

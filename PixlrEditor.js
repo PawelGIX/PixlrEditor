@@ -104,28 +104,9 @@ var pixlr = (function () {
                 var closeBtn = document.createElement('div');
                 //closeBtn.style.height = "20px";
                 //closeBtn.style.width = "20px";
-                closeBtn.style.backgroundColor = "#414141";//3ea2ec
-                closeBtn.style.color = "white";
-                closeBtn.style.position = "absolute";
-                closeBtn.style.right = "0";
-                closeBtn.style.top = "0";
-                closeBtn.style.cursor = "pointer";
-                closeBtn.style.padding = "1em";
-                closeBtn.style.zIndex = "1111";
-                closeBtn.style['border-radius'] = "0 0 0 5px";
-                closeBtn.style['-webkit-border-radius'] = "0 0 0 5px";
-                closeBtn.style['-moz-border-radius'] = "0 0 0 5px";
                 closeBtn.innerHTML = "exit";
-                if($)
-                    $(closeBtn).hover(function(){
-                        $(this).css({
-                            backgroundColor:"#3ea2ec"
-                        });
-                    },function(){
-                        $(this).css({
-                            backgroundColor:"#414141"
-                        });
-                    });
+                closeBtn.className = "pixlr-exit-btn";
+                
                 closeBtn.onclick = function()
                 {
                     PixlrEditor.closeOverlay();
