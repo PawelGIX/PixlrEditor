@@ -17,7 +17,7 @@ WARNING
 ==================
 
 Not tested with Thumbnails module.
-I have not tested yet on localhost.
+It does not work on localhost. Pixlr webservice must have the ability to download images from your server.
 
 
 Links
