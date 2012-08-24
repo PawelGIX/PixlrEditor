@@ -17,6 +17,7 @@ WARNING
 ==================
 
 Not tested with Thumbnails module.
+I have not tested yet on localhost.
 
 
 Links
