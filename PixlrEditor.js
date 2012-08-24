@@ -161,19 +161,16 @@ var pixlr = (function () {
 
 PixlrEditor = {
     $ProcessPageEdit: null,
-    target : 'http://localhost:8888/clicktag/send.php',
+    target : null,
     $thImageLink : null,
     pixlrSettings:function(){
-        pixlr.settings.target = 'http://localhost:8888/clicktag/send.php';
-        //pixlr.settings.exit = 'http://developer.pixlr.com/exit_modal.html';
         pixlr.settings.credentials = true;
         pixlr.settings.method = 'get';
         pixlr.settings.locktitle = true;
         pixlr.settings.service = "express";
         pixlr.settings.locktype = true;
         pixlr.settings.quality = 95;
-        //pixlr.settings.target = "#target";
-        pixlr.settings.exit = 'javascript:top.frame[0].closePixlrWindow()';
+        pixlr.settings.exit = '';
     },//PixlrEditor.pixlrSettings
 
     init: function()
@@ -191,9 +188,10 @@ PixlrEditor = {
 
         $editButtonsContainers.fadeOut();
                 
-        $editButtons.button();//.click(PixlrEditor.events.editClick);
-        $InputfieldFileList.delegate(".pixlr-edit-button", "click", PixlrEditor.events.editClick);     
-        // $editButtonsContainers.closest("li").hover(PixlrEditor.events.hoverIn, PixlrEditor.events.hoverOut);
+        $editButtons.button();
+        
+        //register events
+        $InputfieldFileList.delegate(".pixlr-edit-button", "click", PixlrEditor.events.editClick);           
         $InputfieldFileList.delegate("li.InputfieldImage ", "mouseenter", PixlrEditor.events.hoverIn);
         $InputfieldFileList.delegate("li.InputfieldImage ", "mouseleave", PixlrEditor.events.hoverOut);
 
@@ -213,6 +211,7 @@ PixlrEditor = {
         {
             var $img = PixlrEditor.$thImageLink;
             $img.fadeTo(200,.2);
+            //Reload page. This regenerate thumbnails.
             $.get(window.location.href,function(){
                 $img.attr('src', $img.attr('src').replace(/\?.+$/i,'')+"?"+ new Date().getTime() );
                 $img.fadeTo(200,1);
@@ -222,7 +221,6 @@ PixlrEditor = {
            
         PixlrEditor.$thImageLink = null;
         
-        PixlrEditor.debug( $img.attr('src') );
             
     },
        
@@ -242,6 +240,8 @@ PixlrEditor = {
                         
             var target = targetUrl + "?filename="+ filename +"&page_id="+ page_id +"&field="+ field +"&modal=1&" ;
 
+            // Save link to image
+            // We can refresh it later
             PixlrEditor.$thImageLink = $(this).closest("li").find(".InputfieldFileLink img");
 
             pixlr.overlay.show({
@@ -252,7 +252,6 @@ PixlrEditor = {
                 exit: targetUrl+"?exit=true"
                 });
 
-            PixlrEditor.debug("edit: "+ target );
 
         }//PixlrEditor.events.editClick
         ,
