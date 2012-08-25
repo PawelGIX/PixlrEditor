@@ -76,7 +76,8 @@ class PixlrEditor extends WireData implements Module, ConfigurableModule {
 
     public function ready() 
     {
-         if($this->page->template != 'admin') return;
+        // init only on admin page & if editors enabled
+         if($this->page->template != 'admin' || count($this->editors) == 0) return;
 
 
             $this->protocol = ($this->config->https) ? 'https' : 'http';
@@ -127,9 +128,9 @@ class PixlrEditor extends WireData implements Module, ConfigurableModule {
             $buttons .= '<button class="pixlr-edit-button" id="' . $id . '" data-url="' . $imageUrl . '" data-target="' . $this->pixlrProcessUrl . '" data-filename="' . $filename . '" data-page_id="' . $page_id . '" data-field="' . $field . '" data-service="' . $editor . '">' . sprintf($edit_link, ucfirst($editor)) . '</button>';
         }
 
+
         // add menu bar
-        if (count($this->editors) > 0)
-            $event->return = preg_replace('/(<p.+InputfieldFileData.+>)/U', '$1<span class="ui-widget ui-widget-content pixlr-menu-bar">' . $buttons . '</span>', $event->return);
+        $event->return = preg_replace('/(<p.+InputfieldFileData.+>)/U', '$1<span class="ui-widget ui-widget-content pixlr-menu-bar">' . $buttons . '</span>', $event->return);
     }
 
     public static function getModuleConfigInputfields(array $data) {
