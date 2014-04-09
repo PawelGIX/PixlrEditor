@@ -77,11 +77,19 @@ class ProcessPixlrEditor extends Process implements Module  {
 		if ( !$image_url || !preg_match('/^http:\/\/[a-z0-9]+.pixlr.com/i', $image_url)) {
 			throw new WireException( sprintf( $this->_("Image file: %s not found or wrong hostname."), $image_url) );
 		} else {
-                    
                     // then let's replace images.
                     
                     /* @var $old_img FieldtypeImage */
-                    $old_img = $page->get($field)->get("$filename"); // find image
+                    if ( ! $old_img = $page->get($field)->get("$filename")) // find image
+                    {
+                      
+                      // No image so check if it's a thumbnail
+                    	if ($prefix = substr($filename, 0, strrpos($filename, '_')) AND $url = $page->get($field)->eq(0)->getThumb($prefix))
+                    	{
+	                    	$old_img = (object) array('thumbnail' => true, 'url' => $url);
+	                    	$old_img->filename = wire('config')->paths->root.str_replace(wire('config')->urls->root, '', $old_img->url);
+                    	}
+                    }
                     
                     if($old_img) // image still exists ;)
                     {
@@ -89,7 +97,7 @@ class ProcessPixlrEditor extends Process implements Module  {
                         if(file_put_contents($old_img->filename, file_get_contents($image_url))) // replace image
                         {
 
-                            $old_img->removeVariations(); // clear variations
+                            if ( ! $old_img->thumbnail) $old_img->removeVariations(); // clear variations
 
                             // show new image to user.
                             $out = '<img src="'. $old_img->url .'?'. time() .'" style="max-height:95%;max-width:95%;display:block;" alt="" />';
