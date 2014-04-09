@@ -28,7 +28,7 @@ var pixlr = (function () {
     }
 
     function buildUrl(opt) {
-        var url = 'http://pixlr.com/' + opt.service + '/?s=c', attr;
+        var url = 'http://pixlr.com/' + opt.service + '/?method=get', attr;
         for (attr in opt) {
             if (opt.hasOwnProperty(attr) && attr !== 'service') {
                 url += "&" + attr + "=" + escape(opt[attr]);
@@ -51,7 +51,7 @@ var pixlr = (function () {
                 iframe = document.createElement('iframe'),
                 div = pixlr.overlay.div = document.createElement('div'),
                 idiv = pixlr.overlay.idiv = document.createElement('div');
-                        
+
                         
                         
 
@@ -146,8 +146,6 @@ PixlrEditor = {
     target : null,
     $thImageLink : null,
     pixlrSettings:function(){
-        pixlr.settings.credentials = true;
-        pixlr.settings.method = 'get';
         pixlr.settings.locktitle = true;
         pixlr.settings.service = "express";
         pixlr.settings.locktype = true;
@@ -166,7 +164,8 @@ PixlrEditor = {
 
         var $editButtons = $ProcessPageEdit.find(".pixlr-edit-button");
         var $editButtonsContainers = $ProcessPageEdit.find(".pixlr-menu-bar");
-        var $InputfieldFileList = $(".InputfieldImage  .InputfieldFileList");
+        //var $InputfieldFileList = $(".InputfieldImage  .InputfieldFileList");
+        var $InputfieldFileList = $(".InputfieldImage  .InputfieldFileList, .InputfieldCropImage  .InputfieldFileList");
 
         $editButtonsContainers.fadeOut();
                 
@@ -177,7 +176,17 @@ PixlrEditor = {
         $InputfieldFileList.delegate("li.InputfieldImage ", "mouseenter", PixlrEditor.events.hoverIn);
         $InputfieldFileList.delegate("li.InputfieldImage ", "mouseleave", PixlrEditor.events.hoverOut);
 
-        $InputfieldFileList.live('AjaxUploadDone', PixlrEditor.events.ajaxUploadDone); 
+        $InputfieldFileList.live('AjaxUploadDone', PixlrEditor.events.ajaxUploadDone);
+
+        $.each($("a[class=crop]"), function() {
+            $menuBar = $(".pixlr-menu-bar:last").clone();
+            $menuBar.find('button').data('url', window.location.protocol + '//' + window.location.host + $(this).data('thumburl')).css('display', 'inline');
+            $menuBar.find('button').data('filename', $(this).data('thumburl').substr($(this).data('thumburl').lastIndexOf('/') + 1));
+            $menuBar.css({'top': 'inherit', 'right': '0'});
+            $(this).css({'width': '100%', 'height': '40px'});
+            $(this).prepend($menuBar);
+        });
+
     },
     closeOverlay: function(){
         window.parent.pixlr.overlay.hide();
