@@ -178,14 +178,20 @@ PixlrEditor = {
 
         $InputfieldFileList.live('AjaxUploadDone', PixlrEditor.events.ajaxUploadDone);
 
-        $.each($("a[class=crop]"), function() {
-            $menuBar = $(".pixlr-menu-bar:last").clone();
-            $menuBar.find('button').data('url', window.location.protocol + '//' + window.location.host + $(this).data('thumburl')).css('display', 'inline');
-            $menuBar.find('button').data('filename', $(this).data('thumburl').substr($(this).data('thumburl').lastIndexOf('/') + 1));
-            $menuBar.css({'top': 'inherit', 'right': '0'});
-            $(this).css({'width': '100%', 'height': '40px'});
-            $(this).prepend($menuBar);
-        });
+        var n = 0;
+        if ($("a[class=crop]").length) {
+            $menuBar = $(".pixlr-menu-bar:last");
+            $.each($("a[class=crop]"), function() {
+                $m = $menuBar.clone().hide();
+                $m.find('button').attr('id', $m.find('button:first').attr('id') + n);
+                $m.find('button').data('url', window.location.protocol + '//' + window.location.host + $(this).data('thumburl')).css('display', 'inline');
+                $m.find('button').data('filename', $(this).data('thumburl').substr($(this).data('thumburl').lastIndexOf('/') + 1));
+                $m.css({'top': 'inherit', 'right': '0'});
+                $(this).css({'width': '100%', 'height': '40px'});
+                $(this).prepend($m);
+                n++;
+            });
+        }
 
     },
     closeOverlay: function(){
