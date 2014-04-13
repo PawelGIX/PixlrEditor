@@ -239,7 +239,7 @@ PixlrEditor = {
 
             // Save link to image
             // We can refresh it later
-            PixlrEditor.$thImageLink = $(this).closest("li").find(".InputfieldFileLink img");
+            if ($(this).closest("a[class=crop]").length == 0) PixlrEditor.$thImageLink = $(this).closest("li").find(".InputfieldFileLink img");
 
             pixlr.overlay.show({
                 image:imgUrl, 
@@ -254,7 +254,7 @@ PixlrEditor = {
         ,
         hoverIn: function()
         {
-            $(this).find(".pixlr-menu-bar").stop(true, true).fadeIn();
+            if ($(this).closest(".InputfieldImageGrid").length == 0) $(this).find(".pixlr-menu-bar").stop(true, true).fadeIn();
         },
         hoverOut: function()
         {
