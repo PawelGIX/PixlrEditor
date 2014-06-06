@@ -145,17 +145,17 @@ PixlrEditor = {
     $ProcessPageEdit: null,
     target : null,
     $thImageLink : null,
-    pixlrSettings:function(){
+    updatePixlrSettings:function(){
         pixlr.settings.locktitle = true;
         pixlr.settings.service = "express";
         pixlr.settings.locktype = true;
         pixlr.settings.quality = 95;
         pixlr.settings.exit = '';
-    },//PixlrEditor.pixlrSettings
+    },//PixlrEditor.updatePixlrSettings
 
     init: function()
     {
-        PixlrEditor.pixlrSettings();
+        PixlrEditor.updatePixlrSettings();
 
         $ProcessPageEdit = $("#ProcessPageEdit");
         //PixlrEditor.debug("PixlrEditor.init");
@@ -176,7 +176,7 @@ PixlrEditor = {
         $InputfieldFileList.delegate("li.InputfieldImage ", "mouseenter", PixlrEditor.events.hoverIn);
         $InputfieldFileList.delegate("li.InputfieldImage ", "mouseleave", PixlrEditor.events.hoverOut);
 
-        $InputfieldFileList.live('AjaxUploadDone', PixlrEditor.events.ajaxUploadDone);
+        $InputfieldFileList.on('AjaxUploadDone', PixlrEditor.events.ajaxUploadDone);
 
         var n = 0;
         if ($("a[class=crop]").length) {
@@ -241,13 +241,15 @@ PixlrEditor = {
             // We can refresh it later
             if ($(this).closest("a[class=crop]").length == 0) PixlrEditor.$thImageLink = $(this).closest("li").find(".InputfieldFileLink img");
 
-            pixlr.overlay.show({
+            var params = {
                 image:imgUrl, 
                 service:service, 
                 target:target, 
                 title:filename, 
                 exit: targetUrl+"?exit=true"
-                });
+                };
+            PixlrEditor.debug(params);
+            pixlr.overlay.show();
 
 
         }//PixlrEditor.events.editClick
@@ -260,10 +262,10 @@ PixlrEditor = {
         {
             $(this).find(".pixlr-menu-bar").stop(true, true).fadeOut();
         }
-	
+    
     },
     debug: function(msg){
-        console.log(msg);
+        if(window.debug) console.log(msg);
     }
 }//PixlrEditor
 
