@@ -40,7 +40,7 @@ var pixlr = (function () {
         ie: window.ActiveXObject,
         ie6: window.ActiveXObject && (document.implementation !== null) && (document.implementation.hasFeature !== null) && (window.XMLHttpRequest === null),
         quirks: document.compatMode === 'BackCompat'
-        },
+    },
     return_obj = {
         settings: {
             'service': 'editor'
@@ -53,7 +53,7 @@ var pixlr = (function () {
                 idiv = pixlr.overlay.idiv = document.createElement('div');
 
                         
-                        
+                PixlrEditor.debug(opt);
 
                 div.style.background = '#696969';
                 div.style.opacity = 0.8;
@@ -249,7 +249,7 @@ PixlrEditor = {
                 exit: targetUrl+"?exit=true"
                 };
             PixlrEditor.debug(params);
-            pixlr.overlay.show();
+            pixlr.overlay.show(params);
 
 
         }//PixlrEditor.events.editClick
