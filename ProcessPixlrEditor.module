@@ -53,6 +53,7 @@ class ProcessPixlrEditor extends Process implements Module  {
 		$page_id  = (int) $this->input->get->page_id;
 		$filename = $this->input->get->filename; // basename
 		$field    = $this->input->get->field; // field name eg 'images'
+		$prefix    = $this->input->get->prefix; // field name eg 'images'
                
                 
                 
@@ -84,7 +85,7 @@ class ProcessPixlrEditor extends Process implements Module  {
                     {
                       
                       // No image so check if it's a thumbnail
-                    	if ($prefix = substr($filename, 0, strrpos($filename, '_')) AND $url = $page->get($field)->eq(0)->getThumb($prefix))
+                    	if ($prefix && $url = $page->get($field)->eq(0)->getThumb($prefix))
                     	{
 	                    	$old_img = (object) array('thumbnail' => true, 'url' => $url);
 	                    	$old_img->filename = wire('config')->paths->root.str_replace(wire('config')->urls->root, '', $old_img->url);

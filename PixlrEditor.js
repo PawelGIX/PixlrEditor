@@ -48,7 +48,7 @@ var pixlr = (function () {
         overlay: {
             show: function (options) {
                 var opt = extend(return_obj.settings, options || {}),
-                iframe = document.createElement('iframe'),
+                iframe =  pixlr.overlay.iframe = document.createElement('iframe'),
                 div = pixlr.overlay.div = document.createElement('div'),
                 idiv = pixlr.overlay.idiv = document.createElement('div');
 
@@ -115,6 +115,8 @@ var pixlr = (function () {
 
                 idiv.appendChild(iframe);
                 idiv.appendChild(closeBtn);
+
+                $(window).resize(pixlr.overlay.resize);
             },
             hide: function (callback) {
                 if (pixlr.overlay.idiv && pixlr.overlay.div) {
@@ -124,6 +126,16 @@ var pixlr = (function () {
                 if (callback) {
                     eval(callback);
                 }
+                $(window).unbind("resize",pixlr.overlay.resize);
+            },
+            resize: function (e) {
+                var iframe = pixlr.overlay.iframe;
+                var size = windowSize();
+                // var idiv = pixlr.overlay.idiv;
+                // console.log(pixlr.overlay.iframe);
+                iframe.style.width = (size.width - 70) + 'px';
+                iframe.style.height = (size.height - 50) + 'px';
+
             }
         },
         url: function(options) {
@@ -175,22 +187,27 @@ PixlrEditor = {
         $InputfieldFileList.delegate(".pixlr-edit-button", "click", PixlrEditor.events.editClick);           
         $InputfieldFileList.delegate("li.InputfieldImage ", "mouseenter", PixlrEditor.events.hoverIn);
         $InputfieldFileList.delegate("li.InputfieldImage ", "mouseleave", PixlrEditor.events.hoverOut);
+        $InputfieldFileList.delegate("li.InputfieldImage .crop", "mouseenter", PixlrEditor.events.hoverInCrop);
+        $InputfieldFileList.delegate("li.InputfieldImage .crop", "mouseleave", PixlrEditor.events.hoverOutCrop);
 
         $InputfieldFileList.on('AjaxUploadDone', PixlrEditor.events.ajaxUploadDone);
 
         var n = 0;
         if ($("a[class=crop]").length) {
             $menuBar = $(".pixlr-menu-bar:last");
-            $.each($("a[class=crop]"), function() {
+            $.each($("a[class=crop]"), function(i,el) {
                 $m = $menuBar.clone().hide();
-                $m.find('button').attr('id', $m.find('button:first').attr('id') + n);
-                $m.find('button').data('url', window.location.protocol + '//' + window.location.host + $(this).data('thumburl')).css('display', 'inline');
-                $m.find('button').data('filename', $(this).data('thumburl').substr($(this).data('thumburl').lastIndexOf('/') + 1));
-                $m.css({'top': 'inherit', 'right': '0'});
-                $(this).css({'width': '100%', 'height': '40px'});
+                $m.find('button').
+                attr('id', $m.find('button:first').attr('id') + n).
+                data('url', window.location.protocol + '//' + window.location.host + $(this).data('thumburl')).
+                data('filename', $(this).data('thumburl').substr($(this).data('thumburl').lastIndexOf('/') + 1)).
+                data('prefix', $(el).attr("href").match(/prefix=(.+?)\&/i)[1] );
+                console.log($(el).attr("href").match(/prefix=(.+?)\&/i)[1]);
+               // $m.css({'top': 'inherit', 'right': '0'});
+               // $(this).css({'width': '100%', 'height': '40px'});
                 $(this).prepend($m);
                 n++;
-            });
+            }); 
         }
 
     },
@@ -234,8 +251,9 @@ PixlrEditor = {
             var field = $(this).data("field");
             var targetUrl = $(this).data("target");
             var service = $(this).data("service");
+            var prefix = $(this).data("prefix");
                         
-            var target = targetUrl + "?filename="+ filename +"&page_id="+ page_id +"&field="+ field +"&modal=1&" ;
+            var target = targetUrl + "?filename="+ filename +"&page_id="+ page_id +"&field="+ field +"&prefix="+ prefix +"&modal=1&" ;
 
             // Save link to image
             // We can refresh it later
@@ -256,9 +274,17 @@ PixlrEditor = {
         ,
         hoverIn: function()
         {
-            if ($(this).closest(".InputfieldImageGrid").length == 0) $(this).find(".pixlr-menu-bar").stop(true, true).fadeIn();
+            if ($(this).closest(".InputfieldImageGrid").length == 0) $(this).find(".InputfieldFileData > .pixlr-menu-bar").stop(true, true).fadeIn();
         },
         hoverOut: function()
+        {
+            $(this).find(".InputfieldFileData > .pixlr-menu-bar").stop(true, true).fadeOut();
+        },
+        hoverInCrop: function()
+        {
+            if ($(this).closest(".InputfieldImageGrid").length == 0) $(this).find(".pixlr-menu-bar").stop(true, true).fadeIn();
+        },
+        hoverOutCrop: function()
         {
             $(this).find(".pixlr-menu-bar").stop(true, true).fadeOut();
         }

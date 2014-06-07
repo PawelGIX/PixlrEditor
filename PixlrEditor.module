@@ -125,7 +125,7 @@ class PixlrEditor extends WireData implements Module, ConfigurableModule {
         // create menu bar
         $buttons = null;
         foreach ($this->editors as $editor) {
-            $buttons .= '<button class="pixlr-edit-button" id="' . $id . '" data-url="' . $imageUrl . '" data-target="' . $this->pixlrProcessUrl . '" data-filename="' . $filename . '" data-page_id="' . $page_id . '" data-field="' . $field . '" data-service="' . $editor . '">' . sprintf($edit_link, ucfirst($editor)) . '</button>';
+            $buttons .= '<button class="pixlr-edit-button" id="' . $id . '" data-url="' . $imageUrl . '" data-target="' . $this->pixlrProcessUrl . '" data-prefix="" data-filename="' . $filename . '" data-page_id="' . $page_id . '" data-field="' . $field . '" data-service="' . $editor . '">' . sprintf($edit_link, ucfirst($editor)) . '</button>';
         }
 
 
