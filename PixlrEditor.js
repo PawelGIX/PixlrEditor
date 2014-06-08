@@ -75,7 +75,7 @@ var pixlr = (function () {
                 }
                 div.style.zIndex = 99998;
 
-                idiv.style.border = '1px solid #2c2c2c';
+                idiv.style.border = '0px solid #2c2c2c';
                 if ((bo.ie && bo.quirks) || bo.ie6) {
                     idiv.style.position = 'absolute';
                     idiv.style.setExpression('top', "25+((t=document.documentElement.scrollTop||document.body.scrollTop))+'px'");
@@ -92,7 +92,7 @@ var pixlr = (function () {
 
                 iframe.style.width = (div.offsetWidth - 70) + 'px';
                 iframe.style.height = (div.offsetHeight - 50) + 'px';
-                iframe.style.border = '1px solid #b1b1b1';
+                iframe.style.border = '0px solid #b1b1b1';
                 iframe.style.backgroundColor = '#606060';
                 iframe.style.display = 'block';
                 iframe.frameBorder = 0;
