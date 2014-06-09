@@ -2,8 +2,8 @@
 ProcessWire CMS integration with Pixlr Editor and Pixlr Express.
 This module allows you edit images from InputFieldImage in Pixlr Editors.
 
-![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Pixlr Editor")
-![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Pixlr Express")
+![Pixlr Editor](http://i.imgur.com/56XdGF8l.jpg "Pixlr Editor")
+![Pixlr Express](http://i.imgur.com/FdbYGzul.jpg "Pixlr Express")
 
 ## How to install
 Just place files in `site/modules/PixlrEditor/` folder and install PixlrEditor module. After that each FieldtypeImage field should have buttons to image editors.
@@ -29,4 +29,3 @@ It does not work on localhost. Pixlr webservice must have the ability to downloa
 ## Links
 - [http://processwire.com](http://processwire.com)
 - [https://processwire.com/talk/topic/1703-pixlreditor/](https://processwire.com/talk/topic/1703-pixlreditor/)
-
