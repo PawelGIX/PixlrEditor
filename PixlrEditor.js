@@ -194,15 +194,16 @@ PixlrEditor = {
 
         var n = 0;
         if ($("a[class=crop]").length) {
-            $menuBar = $(".pixlr-menu-bar:last");
+            // $menuBar = $(".pixlr-menu-bar:last");
             $.each($("a[class=crop]"), function(i,el) {
-                $m = $menuBar.clone().hide();
+                var $m = $(this).closest('.InputfieldImage').find('.pixlr-menu-bar').first().clone().hide();
                 $m.find('button').
                 attr('id', $m.find('button:first').attr('id') + n).
                 data('url', window.location.protocol + '//' + window.location.host + $(this).data('thumburl')).
-                data('filename', $(this).data('thumburl').substr($(this).data('thumburl').lastIndexOf('/') + 1)).
+                data('page_id', $(this).attr("href").match(/pages_id=(.+?)\&/i)[1] ).
+                data('filename', $(this).attr("href").match(/filename=(.+?)\&/i)[1] ).
                 data('prefix', $(el).attr("href").match(/prefix=(.+?)\&/i)[1] );
-                console.log($(el).attr("href").match(/prefix=(.+?)\&/i)[1]);
+                // console.log($(el).attr("href").match(/prefix=(.+?)\&/i)[1]);
                // $m.css({'top': 'inherit', 'right': '0'});
                // $(this).css({'width': '100%', 'height': '40px'});
                 $(this).prepend($m);

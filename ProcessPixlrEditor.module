@@ -36,12 +36,12 @@ class ProcessPixlrEditor extends Process implements Module  {
 		$out = '';
 		
                 
-                
-                if($this->input->get('exit'))
-                {
-                    // close overlay
-                    return '<script> window.parent.PixlrEditor.closeOverlay(); </script>';
-                }
+        
+        if($this->input->get('exit'))
+        {
+            // close overlay
+            return '<script> window.parent.PixlrEditor.closeOverlay(); </script>';
+        }
                 
                 
                 //return $out;
@@ -53,7 +53,7 @@ class ProcessPixlrEditor extends Process implements Module  {
 		$page_id  = (int) $this->input->get->page_id;
 		$filename = $this->input->get->filename; // basename
 		$field    = $this->input->get->field; // field name eg 'images'
-		$prefix    = $this->input->get->prefix; // field name eg 'images'
+		$prefix    = $this->input->get->prefix; // thumb prefix
                
                 
                 
@@ -62,49 +62,55 @@ class ProcessPixlrEditor extends Process implements Module  {
               
                 
                 
+        
+        if( !$page->id )
+        {
+            throw new WireException( $this->_("Page not found.") );
+        }
+        
+        // Is there field...
+        if( !$field && $page->template->fieldgroup->getField($field,false) !=null )
+        {
+            throw new WireException( sprintf( $this->_("Field %s not found."), $field) );
+        }
                 
-                if( !$page->id )
-                {
-                    throw new WireException( $this->_("Page not found.") );
-                }
-                
-                // Is there field...
-                if( !$field && $page->template->fieldgroup->getField($field,false) !=null )
-                {
-                    throw new WireException( sprintf( $this->_("Field %s not found."), $field) );
-                }
-                
-                // and proper image URL...
+        // and proper image URL...
 		if ( !$image_url || !preg_match('/^http:\/\/[a-z0-9]+.pixlr.com/i', $image_url)) {
 			throw new WireException( sprintf( $this->_("Image file: %s not found or wrong hostname."), $image_url) );
 		} else {
-                    // then let's replace images.
-                    
-                    /* @var $old_img FieldtypeImage */
-                    if ( ! $old_img = $page->get($field)->get("$filename")) // find image
-                    {
-                      
-                      // No image so check if it's a thumbnail
-                    	if ($prefix && $url = $page->get($field)->eq(0)->getThumb($prefix))
-                    	{
-	                    	$old_img = (object) array('thumbnail' => true, 'url' => $url);
-	                    	$old_img->filename = wire('config')->paths->root.str_replace(wire('config')->urls->root, '', $old_img->url);
-                    	}
-                    }
-                    
-                    if($old_img) // image still exists ;)
-                    {
+                // then let's replace images.
+                
+                /* @var $old_img FieldtypeImage */
+                if ( !$old_img = $page->get($field)->get("$filename") ) // find image
+                {
+                	throw new WireException( sprintf( $this->_("Image file: %s not found in %s."), $filename, $field) );
+                }
+                  
 
-                        if(file_put_contents($old_img->filename, file_get_contents($image_url))) // replace image
-                        {
+              	// check if it's a thumbnail
+            	if ($prefix && $url = $old_img->getThumb($prefix))
+            	{
+                	$thumb_path = wire('config')->paths->root . str_replace(wire('config')->urls->root, '', $url);
+                	file_put_contents($thumb_path, file_get_contents($image_url) );
 
-                            if ( ! $old_img->thumbnail) $old_img->removeVariations(); // clear variations
+                    // show new image to user.
+                    $href = $url ;
+            	}
+                else // if $old_img
+                {
 
-                            // show new image to user.
-                            $out = '<img src="'. $old_img->url .'?'. time() .'" style="max-height:95%;max-width:95%;display:block;" alt="" />';
+                    file_put_contents($old_img->filename, file_get_contents($image_url)); // replace image
 
-                        }
-                    }
+                    // if ( ! $old_img->thumbnail ) $old_img->removeVariations(); // clear variations
+                    $old_img->removeVariations(); // clear variations
+
+                    // show new image to user.
+                    $href = $old_img->url ;
+
+                }
+
+                $out = '<img src="'. $href .'?'. time() .'" style="max-height:95%;max-width:95%;display:block;margin:auto;" alt="" />';
+            	
                          
 		}
 			
