@@ -17,7 +17,7 @@ class ProcessPixlrEditor extends Process implements Module  {
 			'title' => 'Pixlr Image Processing',
 			'summary' => 'Process images edited in Pixlr',
 			'href' => 'http://pixlr.com',
-			'version' => 104,
+			'version' => 105,
 			'permanent' => false,
 			'autoload' => false,
 			'singular' => true,

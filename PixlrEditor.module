@@ -30,7 +30,7 @@ class PixlrEditor extends WireData implements Module, ConfigurableModule {
             // The module'ss title, typically a little more descriptive than the class name
             'title' => 'PixlrEditor',
             // version: major, minor, revision, i.e. 100 = 1.0.0
-            'version' => 104,
+            'version' => 105,
             // summary is brief description of what this module is
             'summary' => 'Enables users to use Pixlr online photo editor on their own site.',
             // Optional URL to more information about the module

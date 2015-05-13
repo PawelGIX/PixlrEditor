@@ -6,6 +6,7 @@ li.InputfieldImage .InputfieldFileData{
     top: 1em;
     right: 1em;
     background: transparent;
+    z-index: 11;
 }
 .pixlr-menu-bar .pixlr-edit-button{
     margin: 0 0 0 1em;
