@@ -17,7 +17,7 @@ class ProcessPixlrEditor extends Process implements Module  {
 			'title' => 'Pixlr Image Processing',
 			'summary' => 'Process images edited in Pixlr',
 			'href' => 'http://pixlr.com',
-			'version' => 105,
+			'version' => 106,
 			'permanent' => false,
 			'autoload' => false,
 			'singular' => true,
@@ -64,7 +64,7 @@ class ProcessPixlrEditor extends Process implements Module  {
                 /* @var $page Page */
 		$page = wire('pages')->get($page_id);
               
-                
+               
                 
         
         if( !$page->id )
